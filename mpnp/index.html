@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html>
+
+<head lang="en">
+    <meta charset="UTF-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+
+    <title>mpnp</title>
+
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <link rel="icon"
+        href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>💫</text></svg>">
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.8.0/codemirror.min.css">
+    <link rel="stylesheet" href="css/app.css">
+
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.8.0/codemirror.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/1.5.3/clipboard.min.js"></script>
+
+    <script src="js/app.js"></script>
+</head>
+
+<body>
+    <div class="container" id="main">
+        <div class="row">
+            <h1 class="col-md-12 text-center">
+                MPNP: Multi-Policy Neural Planner for Urban Driving
+                <small>
+                </small>
+            </h1>
+        </div>
+        <div class="row">
+            <div class="col-md-12 text-center">
+                <ul class="list-inline">
+                    <li>
+                        <a href="https://jchengai.github.io/mpnp">
+                            Jie Cheng
+                        </a>
+                    </li>
+                    <li>
+                        <!-- <a href="todo"> -->
+                        Ren Xin
+                        <!-- </a> -->
+                    </li>
+                    <li>
+                        <!-- <a href="todo"> -->
+                        Sheng Wang
+                        <!-- </a> -->
+                    </li>
+                    <li>
+                        <a href="https://ram-lab.com/">
+                            Ming Liu
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-12 text-center">
+                <p>
+                    Hong Kong University of Science and Technology, <a href="https://ram-lab.com"> RAM-LAB</a>
+                </p>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-4 col-md-offset-4 text-center">
+                <ul class="nav nav-pills nav-justified">
+                    <li>
+                        <a href="https://jchengai.github.io/mpnp">
+                            <image src="img/paper_cover.png" height="60px">
+                                <h4><strong>Paper</strong></h4>
+                        </a>
+                    </li>
+                    <!-- <li>
+                        <a href="todo">
+                            <image src="img/youtube_icon.png" height="60px">
+                                <h4><strong>Video</strong></h4>
+                        </a>
+                    </li> -->
+                    <li>
+                        <a href="https://jchengai.github.io/mpnp">
+                            <image src="img/github.png" height="60px">
+                                <h4><strong>coming soon</strong></h4>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-10 col-md-offset-1" style="background: #F2F2F2">
+                <h3>
+                    Abstract & Method
+                </h3>
+                <p class="text-justify">
+                    Our goal is to train a neural planner that can capture the diverse driving behaviors in complex
+                    urban scenarios.
+                    We observe that even state-of-the-art neural planners are struggling to perform common maneuvers
+                    such as lane-changing, which is rather natural for human drivers.
+                    We propose to explore the multi-modalities in the planning problem and force the neural planner to
+                    explicitly consider different policies.
+                    This is achieved by generating the future trajectories conditioned on every possible reference line,
+                    which could simply be the centerline of the surrounding lanes.
+                    We find this simple strategy yet enables the planner to perform rich and complex behaviors like
+                    overtaking the slow agent and yielding to the fast-approaching vehicle.
+                    We train our model using a real-world driving dataset and demonstrate the effectiveness of our
+                    method through both open-loop and closed-loop evaluations.
+                </p>
+                <p class="text-center">
+                    <img src="./img/overview.png" width="900" class="center">
+                </p>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-10 col-md-offset-1">
+                <h2> Qualitative Results (MPNP vs. baselines)</h2>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-10 col-md-offset-1">
+                <h3> Change to the lane with less traffic </h3>
+            </div>
+            <div class="row">
+                <div class="columns is-multiline iscenterd">
+                    <table
+                        style="border:0px;border-spacing:3px;border-collapse:separate;margin-right:auto;margin-left:auto;">
+                        <tr>
+                            <td style="padding:0 0px 0 0px;">
+                                <video width="450" height="278" muted controls loop autoplay>
+                                    <source src="videos/lane_change/mpnp.mp4" type="video/mp4">
+                                </video>
+                            </td>
+                            <td style="padding:0 0px 0 0px;">
+                                <video width="450" height="278" muted controls loop autoplay>
+                                    <source src="videos/lane_change/urban_driver.mp4" type="video/mp4">
+                                </video>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="padding:0 0px 0 0px;">
+                                <video width="450" height="278" muted controls loop autoplay>
+                                    <source src="videos/lane_change/chauffernet.mp4" type="video/mp4">
+                                </video>
+                            </td>
+                            <td style="padding:0 0px 0px;">
+                                <video width="450" height="278" muted controls loop autoplay>
+                                    <source src="videos/lane_change/chauffernet_vec.mp4" type="video/mp4">
+                                </video>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-10 col-md-offset-1">
+                <h3> Yield to a fast-approaching vehicle </h3>
+            </div>
+            <div class="row">
+                <div class="columns is-multiline iscenterd">
+                    <table
+                        style="border:0px;border-spacing:3px;border-collapse:separate;margin-right:auto;margin-left:auto;">
+                        <tr>
+                            <td style="padding:0 0px 0 0px;">
+                                <video width="450" height="278" muted controls loop autoplay>
+                                    <source src="videos/yield/mpnp.mp4" type="video/mp4">
+                                </video>
+                            </td>
+                            <td style="padding:0 0px 0 0px;">
+                                <video width="450" height="278" muted controls loop autoplay>
+                                    <source src="videos/yield/urban_driver.mp4" type="video/mp4">
+                                </video>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="padding:0 0px 0 0px;">
+                                <video width="450" height="278" muted controls loop autoplay>
+                                    <source src="videos/yield/chauffernet.mp4" type="video/mp4">
+                                </video>
+                            </td>
+                            <td style="padding:0 0px 0px;">
+                                <video width="450" height="278" muted controls loop autoplay>
+                                    <source src="videos/yield/chauffernet_vec.mp4" type="video/mp4">
+                                </video>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-10 col-md-offset-1">
+                <h3> Avoid a parking car </h3>
+            </div>
+            <div class="row">
+                <div class="columns is-multiline iscenterd">
+                    <table
+                        style="border:0px;border-spacing:3px;border-collapse:separate;margin-right:auto;margin-left:auto;">
+                        <tr>
+                            <td style="padding:0 0px 0 0px;">
+                                <video width="450" height="278" muted controls loop autoplay>
+                                    <source src="videos/parking_car/mpnp.mp4" type="video/mp4">
+                                </video>
+                            </td>
+                            <td style="padding:0 0px 0 0px;">
+                                <video width="450" height="278" muted controls loop autoplay>
+                                    <source src="videos/parking_car/urban_driver.mp4" type="video/mp4">
+                                </video>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="padding:0 0px 0 0px;">
+                                <video width="450" height="278" muted controls loop autoplay>
+                                    <source src="videos/parking_car/chauffernet.mp4" type="video/mp4">
+                                </video>
+                            </td>
+                            <td style="padding:0 0px 0px;">
+                                <video width="450" height="278" muted controls loop autoplay>
+                                    <source src="videos/parking_car/chauffernet_vec.mp4" type="video/mp4">
+                                </video>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-10 col-md-offset-1">
+                <h2> Additional Qualitative Results (MPNP)</h2>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-10 col-md-offset-1">
+                <h3> Yielding </h3>
+            </div>
+            <div class="row">
+                <div class="columns is-multiline iscenterd">
+                    <table
+                        style="border:0px;border-spacing:3px;border-collapse:separate;margin-right:auto;margin-left:auto;">
+                        <tr>
+                            <td style="padding:0 0px 0 0px;">
+                                <video width="450" height="278" muted controls loop autoplay>
+                                    <source src="videos/others/yeild_1.mp4" type="video/mp4">
+                                </video>
+                            </td>
+                            <td style="padding:0 0px 0 0px;">
+                                <video width="450" height="278" muted controls loop autoplay>
+                                    <source src="videos/others/yeild_2.mp4" type="video/mp4">
+                                </video>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-10 col-md-offset-1">
+                <h3> Traffic signal </h3>
+            </div>
+            <div class="row">
+                <div class="columns is-multiline iscenterd">
+                    <table
+                        style="border:0px;border-spacing:3px;border-collapse:separate;margin-right:auto;margin-left:auto;">
+                        <tr>
+                            <td style="padding:0 0px 0 0px;">
+                                <video width="450" height="278" muted controls loop autoplay>
+                                    <source src="videos/others/traffic_signal_1.mp4" type="video/mp4">
+                                </video>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- <div class="row">
+            <div class="col-md-8 col-md-offset-2">
+                <h3>
+                    BibTeX
+                </h3>
+                <div class="row align-items-center">
+                    <div class="col py-3">
+                        <pre class="border">
+@article{jcheng2022mpnp,
+title={{MPNP}: Multi-Policy Neural Planner for Urban Driving},
+author={Jie Cheng and Ren Xin and Sheng Wang and Ming Liu},
+journal={arXiv},
+year={2022}
+}
+                    </pre>
+                    </div>
+                </div>
+            </div>
+        </div> -->
+</body>
+
+</html>
