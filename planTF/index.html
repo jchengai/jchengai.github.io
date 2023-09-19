@@ -1,0 +1,482 @@
+<html>
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <title>PlanTF</title>
+  <link href="./css_js/style.css" rel="stylesheet">
+  <script type="text/javascript" src="./css_js/jquery.mlens-1.0.min.js"></script>
+  <script type="text/javascript" src="./css_js/jquery.js"></script>
+  <link rel="icon" href="figs/logo.png">
+
+  <style>
+    p.serif {
+      font-family: "Times New Roman", Times, serif;
+    }
+
+    p.sansserif {
+      font-family: Arial, Helvetica, sans-serif;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="content">
+    <h1><strong>Rethinking Imitation-based Planners for Autonomous Driving</strong></h1>
+    <p id="authors" style="font-size: 24px;" class="serif">
+      <a href="https://github.com/jchengai">Jie Cheng<sup>1</sup></a>
+      <a href="https://sites.google.com/view/yingbingchen-introductions/main-page">Yingbing Chen<sup>1</sup></a>
+      <a>Xiaodong Mei<sup>1</sup></a>
+      <a>Bowen Yang<sup>1</sup></a>
+      <a>Bo Li<sup>3</sup></a>
+      <a href="https://facultyprofiles.hkust.edu.hk/profiles.php?profile=ming-liu-eelium#">Ming Liu<sup>1,2*</sup></a>
+      <br>
+      <a style="font-size: 0.7em"><sup>*</sup>Corresponding Author.</a>
+      <br>
+      <span style="font-size: 0.7em; margin-top: 0.5em">
+        <a><sup>1</sup>Hong Kong University of Science and Technology</a>
+        <a><sup>2</sup>Hong Kong University of Science and Technology (GuangZhou)</a>
+        <a><sup>3</sup>Lotus Technology</a>
+      </span>
+    </p>
+
+    <font size="+1">
+      <p style="text-align: center;" class="serif">
+        <a href="todo" target="_blank" style="font-weight: bold;">[Arxiv Report (coming
+          soon)]</a>&nbsp;&nbsp;&nbsp;&nbsp;
+        <a href="https://github.com/jchengai/planTF" target="_blank"
+          style="font-weight: bold;">[Github]</a>&nbsp;&nbsp;&nbsp;&nbsp;
+        <a href="#bibtex" style="font-weight: bold;">[BibTeX]</a>
+      </p><br>
+    </font>
+  </div>
+
+  <div class="content">
+    <p style="text-align:left; font-size: 2em; font-weight: bold" class="serif">Abstract</p>
+    <p style="font-size: 1.2em" class="serif">
+      In recent years, imitation-based driving planners have reported considerable success. However, due to the absence
+      of a standardized benchmark, the effectiveness of various designs remains unclear. The newly released <a
+        href="https://github.com/motional/nuplan-devkit">nuPlan</a>
+      addresses this issue by offering a large-scale real-world dataset and a standardized closed-loop benchmark for
+      equitable comparisons. Utilizing this platform, we conduct a comprehensive study on two fundamental yet
+      underexplored aspects of imitation-based planners: the essential features for ego planning and the effective data
+      augmentation techniques to reduce compounding errors. Furthermore, we highlight an imitation gap that has been
+      overlooked by current learning systems. Finally, integrating our findings, we propose a strong baseline
+      model—<a href="https://github.com/jchengai/planTF">PlanTF</a>. Our results demonstrate that a well-designed,
+      purely imitation-based planner can achieve highly
+      competitive performance compared to state-of-the-art methods involving hand-crafted rules and exhibit superior
+      generalization capabilities in long-tail cases. Our model and benchmarks are publicly available.
+    </p>
+  </div>
+
+  <div class="content">
+    <p style="text-align:left; font-size: 2em; font-weight: bold" class="serif">Benchmarks</p>
+    <p class="serif" style="font-size: 1.2em; text-align: left; margin: 5px; margin-bottom: 10px">
+      For evaluation, 14 scenario types specified by the nuPlan Planning Challenge are considered, each comprising 20
+      scenarios.
+      We examine two different scenario selection schemes:
+    </p>
+    <p style="font-size: 1.2em;" class="serif">
+      (1) <span style="color: blue; font-weight: bold">Test14-random</span>:
+      scenarios are randomly sampled from each type and fixed after selection.
+    </p>
+    <p style="font-size: 1.2em;" class="serif">
+      (2) <span style="color: blue; font-weight: bold">Test14-hard</span>:
+      in order to investigate the planner's performance on long-tail scenarios, we execute 100 scenarios of each type
+      using a state-of-the-art rule-based planner (<a
+        href="https://github.com/autonomousvision/tuplan_garage">PDM-Closed</a>),
+      subsequently selecting the 20 least-performing scenarios of each type.
+    </p>
+    <p style="text-align:left; font-size: 2em; font-weight: bold" class="serif">Metrics</p>
+    <p class="serif" style="font-size: 1.2em; text-align: left; margin: 5px; margin-bottom: 10px">
+      We employ the official evaluation metrics provided by nuPlan. Detailed calculation methods can be found in <a
+        href="https://nuplan-devkit.readthedocs.io/en/latest/metrics_description.html">nuPlan metrics</a>.
+    </p>
+    <p style="font-size: 1.2em;" class="serif">
+      (1) <span style="color: blue; font-weight: bold">OLS</span>: open-loop score.
+    </p>
+    <p style="font-size: 1.2em;" class="serif">
+      (2) <span style="color: blue; font-weight: bold">NR-CLS</span>: closed-loop score with non-reactive traffic
+      agents.
+    </p>
+    <p style="font-size: 1.2em;" class="serif">
+      (2) <span style="color: blue; font-weight: bold">R-CLS</span>: closed-loop score with reactive traffic agents.
+    </p>
+  </div>
+
+  <div class="content">
+    <p style="text-align:left; font-size: 2em; font-weight: bold" class="serif">Main results</p>
+    <div class="row">
+      <div class="col" style="width: 35%;">
+        <img class="summary-img" src="figs/baseline.png" style="width:80%;">
+        <figcaption>Fig.1 - Baseline model used for experiments</figcaption>
+      </div>
+      <div class="col" style="width: 65%;">
+        <img class="summary-img" src="figs/table1.png" style="width:93%;">
+        <figcaption>Tab.1 - Results with different input features of Ego vehicle</figcaption>
+      </div>
+    </div>
+
+    <li style="color:black; padding-top: 10px; padding-bottom: 20px;">
+      Experimental results shows that shortcut learning generally occurs for input features, such as historical motions
+      and single-frame kinematic states (Tab. 1).
+      This leads to an interesting observation: <i>State3</i>, as an ambiguous model (loses all
+      kinematic information and poor OLS), yet has stronger CLS.
+      <i style="color:chocolate">
+        Can we have both good OLS and CLS?
+      </i>
+    </li>
+
+    <div class="row">
+      <div class="col" style="width: 35%;">
+        <img class="summary-img" src="figs/sde.png" style="width:95%;">
+        <figcaption>Fig.2 - State dropout encoder (SDE)</figcaption>
+      </div>
+      <div class="col" style="width: 65%;">
+        <img class="summary-img" src="figs/table2.png" style="width:93%;">
+        <figcaption>Tab.2 - Experimental results of the state dropout encoder</figcaption>
+      </div>
+    </div>
+
+    <li style="color:black; padding-top: 10px; padding-bottom: 20px;">
+      We propose <i style="color:chocolate">state dropout encoder (SDE)</i> (Fig. 2), which drops individual kinematic
+      state with a certain probability during training. <i>State5</i> and <i>state6</i> models augmented with
+      SDE exhibit not only improved closed-loop score but also substantially higher open-loop score, score, providing
+      compelling evidence for the efficacy of SDE.
+    </li>
+
+    <div class="row">
+      <div class="col" style="width: 50%;">
+        <img class="summary-img" src="figs/aug.png" style="width:80%;">
+        <figcaption style="font-size: 12px; text-align: left;">Fig.3 - (a) The original scenario. (b) Random noise is
+          added to the
+          AV’s current state and history motion is smoothed. (c) The coordinates of
+          the scenario are re-normalized based on the perturbed position of the AV.
+          (d) A corrected future trajectory is generated using constrained nonlinear
+          optimization.</figcaption>
+      </div>
+      <div class="col" style="width: 50%;">
+        <img class="summary-img" src="figs/table3.png" style="width:55%;">
+        <figcaption style="font-size: 15px; text-align: left;">Tab.3 - Results of different augmentation and
+          normalization combinations on <b>Test14-random</b>
+          benchmark. P: <b>P</b>erturbation; RN: <b>R</b>e-<b>N</b>ormalization; FC: <b>F</b>uture <b>C</b>orrection.
+        </figcaption>
+      </div>
+    </div>
+
+    <li style="color:black; padding-top: 10px; padding-bottom: 0px;">
+      Our results demonstrate that perturbation is vital for reducing compounding errors, but only effective with
+      appropriate feature normalization.
+    </li>
+
+    <p style="text-align:left; font-size: 2em; font-weight: bold" class="serif">Comparison to state-of-the-art</p>
+
+    <img class="summary-img" src="figs/table4.png" style="width:90%;">
+    <figcaption>Tab. 4 - <sup><span>&#8224;</span></sup> indicates these methods' final output trajectory relies on
+      rule-based strategies or post-optimization.
+
+      <li style="color:black; padding-top: 10px; padding-bottom: 0px;">
+        By incorporating our findings, the proposed purely learning-based baseline model, <i style="color: chocolate;">
+          PlanTF</i>, demonstrates impressive performance compared to state-of-the-art approaches and is on par with
+        methods that employ intricate rule-based strategies or post-optimization. This highlights the importance of
+        proper design choices for imitation learning-based planners.
+      </li>
+  </div>
+
+
+  <div class="content">
+    <p style="text-align:left; font-size: 2em; font-weight: bold" class="serif">Test14-hard example scenarios
+      (Expert+LQR)</p>
+    <p style="font-size: 1.2em" class="serif">
+      <span style="color: red; font-weight: bold">Click to play the videos (playspeed <span>&times</span> 2.0).</span>
+    </p>
+
+    <div class="row">
+      <div class="col-gallery">
+        <video clickplay controls muted width="100%">
+          <source src="videos/test14_hard_examples/01.mp4" type="video/mp4">
+        </video>
+      </div>
+      <div class="col-gallery">
+        <video clickplay controls muted width="100%">
+          <source src="videos/test14_hard_examples/02.mp4" type="video/mp4">
+        </video>
+      </div>
+      <div class="col-gallery">
+        <video clickplay controls muted width="100%">
+          <source src="videos/test14_hard_examples/03.mp4" type="video/mp4">
+        </video>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-gallery">
+        <video clickplay controls muted width="100%">
+          <source src="videos/test14_hard_examples/04.mp4" type="video/mp4">
+        </video>
+      </div>
+      <div class="col-gallery">
+        <video clickplay controls muted width="100%">
+          <source src="videos/test14_hard_examples/05.mp4" type="video/mp4">
+        </video>
+      </div>
+      <div class="col-gallery">
+        <video clickplay controls muted width="100%">
+          <source src="videos/test14_hard_examples/06.mp4" type="video/mp4">
+        </video>
+      </div>
+    </div>
+  </div>
+
+  <div class="content">
+    <p style="text-align:left; font-size: 2em; font-weight: bold" class="serif">Comparative results (Test14-hard,
+      non-reactive)</p>
+    <p style="font-size: 1.2em;" class="serif">
+      We show the comparative results of our model and other state-of-the-art planners on the <b>Test14-hard</b>
+      benchmark. The following examples scenarios demonstrate that while partially rule-based planner performs well on
+      most of the ordinary scenarios, they may struggle to generalize to unusual/long-tail cases.
+    </p>
+    <span style="font-size: 0.8em; margin-top: 0.5em;">
+      [1] D. Dauner et al., “Parting with misconceptions about learning-based vehicle motion planning",
+      CoRL 2023. <br>
+      [2] Z. Huang et al., "Gameformer: Game-theoretic modeling and learning of transformer-based
+      interactive prediction and planning for autonomous driving", ICCV 2023.
+    </span>
+
+    <div class="row" style="margin-top: 2em;">
+      <div class="col-gallery" style="font-size: 20px; text-align: center; font-weight: bold;">
+        <a href="https://github.com/autonomousvision/tuplan_garage">PDM-Hybrid<sup>[1]</sup></a>
+      </div>
+      <div class="col-gallery" style="font-size: 20px; text-align: center; font-weight: bold;">
+        <a href="https://github.com/MCZhi/GameFormer-Planner">GameFormer<sup>[2]</sup></a>
+      </div>
+      <div class="col-gallery" style="font-size: 20px; text-align: center; font-weight: bold; color: chocolate;">
+        <a href="https://github.com/jchengai/planTF" style="color: chocolate;">PlanTF(Ours)</a>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-gallery">
+        <video clickplay controls muted width="100%">
+          <source src="videos/comparison1/pdm_01.mp4" type="video/mp4">
+        </video>
+        <figcaption class="fail">fail</figcaption>
+      </div>
+      <div class="col-gallery">
+        <video clickplay controls muted width="100%">
+          <source src="videos/comparison1/gameformer_01.mp4" type="video/mp4">
+        </video>
+        <figcaption class="fail">fail</figcaption>
+      </div>
+      <div class="col-gallery">
+        <video clickplay controls muted width="100%">
+          <source src="videos/comparison1/plantf_01.mp4" type="video/mp4">
+        </video>
+        <figcaption class="pass">pass</figcaption>
+      </div>
+    </div>
+    <!-- Token: 03d25c49fbc6550e ['2021.09.22.03.46.15_veh-51_01522_02013'] ['changing_lane'] -->
+    <p class="scene">sharp right turn + change lane</p>
+
+    <div class="row">
+      <div class="col-gallery">
+        <video clickplay controls muted width="100%">
+          <source src="videos/comparison2/pdm_02.mp4" type="video/mp4">
+        </video>
+        <figcaption class="fail">fail</figcaption>
+      </div>
+      <div class="col-gallery">
+        <video clickplay controls muted width="100%">
+          <source src="videos/comparison2/gameformer_02.mp4" type="video/mp4">
+        </video>
+        <figcaption class="pass">pass</figcaption>
+      </div>
+      <div class="col-gallery">
+        <video clickplay controls muted width="100%">
+          <source src="videos/comparison2/plantf_02.mp4" type="video/mp4">
+        </video>
+        <figcaption class="pass">pass</figcaption>
+      </div>
+    </div>
+    <!-- Token: 442523fcce0950e8 ['2021.06.28.21.29.39_veh-12_02171_02725'] ['following_lane_with_lead'] -->
+    <p class="scene">sudden stop with leading vehicle</p>
+
+    <div class="row">
+      <div class="col-gallery">
+        <video clickplay controls muted width="100%">
+          <source src="videos/comparison3/pdm_03.mp4" type="video/mp4">
+        </video>
+        <figcaption class="fail">fail</figcaption>
+      </div>
+      <div class="col-gallery">
+        <video clickplay controls muted width="100%">
+          <source src="videos/comparison3/gameformer_03.mp4" type="video/mp4">
+        </video>
+        <figcaption class="fail">fail</figcaption>
+      </div>
+      <div class="col-gallery">
+        <video clickplay controls muted width="100%">
+          <source src="videos/comparison3/plantf_03.mp4" type="video/mp4">
+        </video>
+        <figcaption class="pass">pass</figcaption>
+      </div>
+    </div>
+    <!-- Token: 60ad86e2dbf156b5 ['2021.09.09.17.18.51_veh-48_01248_01450'] ['starting_left_turn'] -->
+    <p class="scene">unprotected left turn</p>
+
+    <div class="row">
+      <div class="col-gallery">
+        <video clickplay controls muted width="100%">
+          <source src="videos/comparison4/pdm_04.mp4" type="video/mp4">
+        </video>
+        <figcaption class="fail">fail</figcaption>
+      </div>
+      <div class="col-gallery">
+        <video clickplay controls muted width="100%">
+          <source src="videos/comparison4/gameformer_04.mp4" type="video/mp4">
+        </video>
+        <figcaption class="fail">fail</figcaption>
+      </div>
+      <div class="col-gallery">
+        <video clickplay controls muted width="100%">
+          <source src="videos/comparison4/plantf_04.mp4" type="video/mp4">
+        </video>
+        <figcaption class="pass">pass</figcaption>
+      </div>
+    </div>
+    <!-- Token: 0681f7fa37dd5f63 ['2021.05.25.12.40.06_veh-47_01110_01596'] ['traversing_pickup_dropoff'] -->
+    <p class="scene">Consecutive lane change at pickup/dropoff</p>
+
+    <div class="row">
+      <div class="col-gallery">
+        <video clickplay controls muted width="100%">
+          <source src="videos/comparison5/pdm_05.mp4" type="video/mp4">
+        </video>
+        <figcaption class="fail">fail</figcaption>
+      </div>
+      <div class="col-gallery">
+        <video clickplay controls muted width="100%">
+          <source src="videos/comparison5/gameformer_05.mp4" type="video/mp4">
+        </video>
+        <figcaption class="fail">fail</figcaption>
+      </div>
+      <div class="col-gallery">
+        <video clickplay controls muted width="100%">
+          <source src="videos/comparison5/plantf_05.mp4" type="video/mp4">
+        </video>
+        <figcaption class="pass">pass</figcaption>
+      </div>
+    </div>
+    <!-- Token: 855985a401ab59ea ['2021.06.28.15.59.39_veh-47_04537_05600'] ['waiting_for_pedestrian_to_cross'] -->
+    <p class="scene">waiting for pedestrian at crosswalk (better viewed at fullscreen)</p>
+
+  </div>
+
+  <div class="content">
+    <p style="text-align:left; font-size: 2em; font-weight: bold" class="serif">Limitation & Failure cases</p>
+
+    <p class="serif" style="font-size: 1.2em; text-align: left; margin: 5px; margin-bottom: 10px">
+      Although our method significantly enhances pure imitation driving performance, it merely serves as a starting
+      point and possesses substantial potential for improvement. We discovered that PlanTF often falters in scenarios
+      necessitating dedicated operations and struggles to execute self-motivated lane changes. We attribute these issues
+      primarily to the fundamental mismatch between open-loop training and closed-loop testing, reserving the
+      exploration of closed-loop training for future work.
+    </p>
+
+    <div class="row">
+      <div class="col-gallery">
+        <video clickplay controls muted width="100%">
+          <source src="videos/failure_cases/01.mp4" type="video/mp4">
+        </video>
+        <figcaption>side collision at narrow passages</figcaption>
+      </div>
+      <div class="col-gallery">
+        <video clickplay controls muted width="100%">
+          <source src="videos/failure_cases/02.mp4" type="video/mp4">
+        </video>
+        <!-- Token: 66f5844016ec5134 ['2021.09.16.17.40.35_veh-08_00032_01780'] ['starting_right_turn'] -->
+        <figcaption>collision with bicycle at right turn</figcaption>
+      </div>
+      <div class="col-gallery">
+        <video clickplay controls muted width="100%">
+          <source src="videos/failure_cases/03.mp4" type="video/mp4">
+        </video>
+        <!-- 2021.06.28.21.23.50_veh-47_01886_04690 - 840f360aea765a57 -->
+        <figcaption>collisions with traffic cone</figcaption>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-gallery">
+        <video clickplay controls muted width="100%">
+          <source src="videos/failure_cases/04.mp4" type="video/mp4">
+        </video>
+        <!-- Token: 88a42c466d2b5ebd ['2021.09.16.15.00.21_veh-45_01380_01959'] ['low_magnitude_speed'] -->
+        <figcaption>fail to depart from the parking zone</figcaption>
+      </div>
+      <div class="col-gallery">
+        <video clickplay controls muted width="100%">
+          <source src="videos/failure_cases/05.mp4" type="video/mp4">
+        </video>
+        <!-- Token: db363d844b3754f1 ['2021.06.28.21.47.53_veh-35_00972_02652'] ['traversing_pickup_dropoff'] -->
+        <figcaption>fail to change lane</figcaption>
+      </div>
+      <div class="col-gallery">
+        <video clickplay controls muted width="100%">
+          <source src="videos/failure_cases/06.mp4" type="video/mp4">
+        </video>
+        <figcaption>fail to nudge around a parking vehicle</figcaption>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="content">
+    <p style="text-align:left; font-size: 2em; font-weight: bold" class="serif">Appendix</p>
+    <div class="row">
+      <div class="col" style="width: 41%;">
+        <img class="summary-img" src="figs/table5.png" style="width:95%;">
+        <figcaption>Tab.5 - Comparison to SOTA on <b>Val14</b> benchmark</figcaption>
+      </div>
+      <div class="col" style="width: 59%;">
+        <img class="summary-img" src="figs/table6.png" style="width:93%;">
+        <figcaption>Tab.6 - Ablation study on the state dropout rate of the SDE.</figcaption>
+      </div>
+    </div>
+  </div>
+
+
+  <div class="content" id="bibtex">
+    <p style="text-align:left; font-size: 2em; font-weight: bold" class="serif">BibTeX</p>
+    <span class="serif" style="color:red;"> (Coming Soon)</span>
+    <!-- <code> @misc{jcheng2023plantf,<br>
+  &nbsp;&nbsp;title={Rethinking Imitation-based Planners for Autonomous Driving},<br>
+  &nbsp;&nbsp;author={Cheng, Jie and Chen, Yingbing and Mei, Xiaodong and Yang, Bowen and Li, Bo and Liu, Ming},<br>
+  &nbsp;&nbsp;booktitle={arXiv preprint},<br>
+  &nbsp;&nbsp;year={2023},<br>
+  &nbsp;&nbsp;archivePrefix={arXiv},<br>
+  &nbsp;&nbsp;primaryClass={cs.Ro}<br>
+  } </code> -->
+  </div>
+
+  <div class="content">
+    <p class="serif">
+      Project page template is borrowed from <a href="https://dreambooth.github.io/">DreamBooth</a>.
+    </p>
+  </div>
+
+</body>
+
+<script>
+  var videos = document.getElementsByClassName("clickplay");
+  for (var i = 0; i < videos.length; i++) {
+    videos[i].addEventListener("click", function () {
+      this.play();
+    });
+    videos[i].addEventListener("ended", function () {
+      this.pause();
+      this.currentTime = 0;
+    });
+  }
+</script>
+
+</html>
