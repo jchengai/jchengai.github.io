@@ -1,0 +1,568 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta name="description" content="Pushing the Limit of Imitation Learning-based Planning for Autonomous Driving">
+  <meta name="keywords" content="Autonomous Driving, Imitation Learning, Planning">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Pushing the Limit of Learning-based Planning for Autonomous Driving</title>
+
+
+  <link href="https://fonts.googleapis.com/css?family=Google+Sans|Noto+Sans|Castoro" rel="stylesheet">
+
+  <link rel="stylesheet" href="./static/css/bulma.min.css">
+  <link rel="stylesheet" href="./static/css/bulma-carousel.min.css">
+  <link rel="stylesheet" href="./static/css/bulma-slider.min.css">
+  <link rel="stylesheet" href="./static/css/fontawesome.all.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/jpswalsh/academicons@1/css/academicons.min.css">
+  <link rel="stylesheet" href="./static/css/index.css">
+  <link rel="icon" href="./static/images/UST.svg">
+
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script type="text/javascript" id="MathJax-script" async
+    src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js">
+    </script>
+  <script defer src="./static/js/fontawesome.all.min.js"></script>
+  <script src="./static/js/bulma-carousel.min.js"></script>
+  <script src="./static/js/bulma-slider.min.js"></script>
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <!-- <script src="./static/js/index.js"></script> -->
+</head>
+
+<body>
+
+  <!-- <nav class="navbar"
+
+  <!-- <nav class="navbar" role="navigation" aria-label="main navigation">
+class="navbar-burger" aria-label="menu" aria-expanded="false">
+        <span aria-hidden="true"></span>
+        <span aria-hidden="true"></span>
+        <span aria-hidden="true"></span>
+      </a>
+    </div>
+    <div class="navbar-menu">
+      <div class="navbar-start" style="flex-grow: 1; justify-content: center;">
+        <a class="navbar-item" href="https://keunhong.com">
+          <span class="icon">
+            <i class="fas fa-home"></i>
+          </span>
+        </a>
+
+        <div class="navbar-item has-dropdown is-hoverable">
+          <a class="navbar-link">
+            More Research
+          </a>
+          <div class="navbar-dropdown">
+            <a class="navbar-item" href="https://hypernerf.github.io">
+              HyperNeRF
+            </a>
+            <a class="navbar-item" href="https://nerfies.github.io">
+              Nerfies
+            </a>
+            <a class="navbar-item" href="https://latentfusion.github.io">
+              LatentFusion
+            </a>
+            <a class="navbar-item" href="https://photoshape.github.io">
+              PhotoShape
+            </a>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </nav> -->
+
+
+  <section class="hero">
+    <div class="hero-body">
+      <div class="container is-max-desktop">
+        <div class="columns is-centered">
+          <div class="column has-text-centered">
+            <h1 class="title is-2 publication-title">
+              <font style="color: royalblue;">PLUTO</font>: <font style="color: royalblue;">P</font>ushing the <font
+                style="color: royalblue;">L</font>imit of Imitation Learning-based Planning for
+              A<font style="color: royalblue;">UTO</font>nomous Driving
+            </h1>
+            <div class="is-size-5 publication-authors">
+              <span class="author-block">
+                <a href="https://jchengai.github.io" target=”_blank”>Jie Cheng</a>,</span>
+              <span class="author-block">
+                <a href="https://sites.google.com/view/chenyingbing-homepage" target=”_blank”>Yingbing Chen</a>,</span>
+              <span class="author-block">
+                <a href="https://cqf.io" target=”_blank”>Qifeng Chen</a>,</span>
+            </div>
+
+            <div class="is-size-5 publication-authors">
+              <span class="author-block">Hong Kong University of Science and Technology</span>
+            </div <div class="column has-text-centered">
+            <div class="publication-links">
+              <!-- PDF Link. -->
+              <span class="link-block">
+                <a href="https://jchengai.github.io/pluto" class="external-link button is-normal is-rounded is-gray">
+                  <span class="icon">
+                    <i class="fas fa-file-pdf"></i>
+                  </span>
+                  <span>Paper</span>
+                </a>
+              </span>
+              <span class="link-block">
+                <a href="https://jchengai.github.io/pluto" class="external-link button is-normal is-rounded is-gray">
+                  <span class="icon">
+                    <i class="ai ai-arxiv"></i>
+                  </span>
+                  <span>arXiv (soon)</span>
+                </a>
+              </span>
+              <!-- Code Link. -->
+              <span class="link-block">
+                <a href="https://github.com/jchengai/pluto" class="external-link button is-normal is-rounded is-dark">
+                  <span class="icon">
+                    <i class="fab fa-github"></i>
+                  </span>
+                  <span>Code</span>
+                </a>
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container is-max-desktop">
+      <!-- Abstract. -->
+      <div class="columns is-centered has-text-centered" style="border-radius: 10px; padding: 10px;">
+        <div class="column is-four-fifths">
+          <h2 class="title is-3">Abstract</h2>
+          <div class="content has-text-justified">
+            We present PLUTO, a powerful framework that <u>P</u>ushes the <u>L</u>imit of imitation
+            learning-based planning for a<u>UTO</u>nomous driving.
+            Our improvements stem from three pivotal aspects:
+            a longitudinal-lateral aware model architecture that enables flexible and diverse driving behaviors; An
+            innovative auxiliary loss computation method that is broadly applicable and efficient for batch-wise
+            calculation; A novel training framework that leverages contrastive learning, augmented by a suite of new
+            data augmentations to regulate driving behavior and facilitate the understanding of underlying interactions.
+            We assessed our framework using the large-scale real-world nuPlan dataset and its associated standardized
+            planning benchmark.
+            Impressively, PLUTO achieves state-of-the-art closed-loop performance, beating other competing
+            learning-based methods and surpassing the current top-performed rule-based planner for the first time.
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" style="margin-top: 0; padding-top: 50px;">
+    <h2 class="title is-4" style="text-align: center;">Method Overview</h2>
+    <div class="container is-max-desktop">
+      <div class="demo-block">
+        <div style="padding: 10px;">
+          <h2 class="title is-5" style="text-align: center;">Model Architecture</h2>
+          <img class="summary-img" src="static/images/model.svg" width="85%">
+          <div style="padding: 10px; margin-left: 30px; margin-right: 30px;">
+            <p style="text-align: left;">
+              We introduce a query-based model architecture that simultaneously addresses lateral and longitudinal
+              planning maneuvers, enabling flexible and diverse driving behaviors.
+            </p>
+          </div>
+        </div>
+
+        <div style="padding: 10px;">
+          <h2 class="title is-5" style="text-align: center;">Auxiliary Loss Computation Method</h2>
+          <img class="summary-img" src="static/images/aux_loss.svg" width="85%">
+          <div style="padding: 10px; margin-left: 30px; margin-right: 30px;">
+            <p style="text-align: left;">
+              We propose a novel method for calculating auxiliary loss based on differential interpolation. This method
+              is
+              applicable to a broad spectrum of auxiliary tasks and allows for efficient batch-wise computation in
+              vector-based models.
+            </p>
+          </div>
+        </div>
+
+        <div style="padding: 10px;">
+          <h2 class="title is-5" style="text-align: center;">Contrastive Imitation Learning Framework</h2>
+          <img class="summary-img" src="static/images/cil.svg" width="85%">
+          <img class="summary-img" src="static/images/augs.svg" width="80%">
+          <div style="padding: 10px; margin-left: 30px; margin-right: 30px;">
+            <p style="text-align: left; text-wrap: pretty;">
+              We present the Contrastive Imitation Learning (CIL) framework, accompanied by a new set of data
+              augmentations. The CIL framework is aimed at regulating driving behaviors and enhancing interaction
+              learning, without significantly increasing the complexity of training.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </section>
+
+
+
+  <section class="section" style="margin-top: 0; padding-top: 50px;">
+    <h2 class="title is-4" style="text-align: center;">Qualitative Results</h2>
+    <div class="container is-max-desktop">
+    </div>
+
+
+    <div class="container is-max-desktop">
+      <div class="demo-block">
+        <div style="padding: 10px;">
+          <div style="border: solid gray; border-radius: 10px; border-width: 1px; padding: 10px;">
+            <h2 class="title is-5" style="text-align: center;">Legend</h2>
+            <img class="summary-img" src="static/images/legend.svg" width="95%">
+          </div>
+        </div>
+
+        <div class="video-grid-2">
+          <video class="video-border" autoplay controls muted loop playsinline>
+            <source src="static/videos/qua_res/2021.09.13.13.03.21_veh-28_01082_01561_22958312e28e5d9f.mp4"
+              type="video/mp4">
+          </video>
+          <video class="video-border" autoplay controls muted loop playsinline>
+            <source src="./static/videos/qua_res/2021.10.05.06.31.40_veh-52_01598_02013_f7f0989080295b75.mp4"
+              type="video/mp4">
+          </video>
+        </div>
+        <div class="text-grid-2">
+          <div class="grid-content">
+            Overtake a slow leading vehicle.
+          </div>
+          <div class="grid-content">
+            Navigates around the parking vehicle.
+          </div>
+        </div>
+
+        <div class="video-grid-2">
+          <video class="video-border" autoplay controls muted loop playsinline>
+            <source src="static/videos/qua_res/2021.09.16.13.05.51_veh-42_01597_01965_4aeaa8bebf7a57f1.mp4"
+              type="video/mp4">
+          </video>
+          <video class="video-border" autoplay controls muted loop playsinline>
+            <source src="./static/videos/qua_res/2021.09.09.17.18.51_veh-48_00889_01147_1039c939079950f4.mp4"
+              type="video/mp4">
+          </video>
+        </div>
+        <div class="text-grid-2">
+          <div class="grid-content">
+            Dynamic lane change & perception errors.
+          </div>
+          <div class="grid-content">
+            Left turn at a complex intersection.
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </section>
+
+  <section class="section" style="margin-top: 0; padding-top: 50px;">
+    <h2 class="title is-4" style="text-align: center;">Model Ablation Results</h2>
+    <div class="container is-max-desktop">
+      <div class="columns is-centered">
+        <div class="column is-full-width" style="text-align: center;">
+          <p>
+            <span style="color: rgb(207, 12, 12);">Playspeed <span>&times</span> 2</span>
+          </p><br>
+        </div>
+      </div>
+    </div>
+
+    <div class="container is-max-desktop">
+      <div class="demo-block">
+        <div class="text-grid-3">
+          <div class="grid-content">
+            \(\mathcal{M}_1\) (SDE)
+          </div>
+          <div class="grid-content">
+            \(\mathcal{M}_3\) (SDE + Aux)
+          </div>
+          <div class="grid-content">
+            \(\mathcal{M}_4\) (SDE + Aux + CIL)
+          </div>
+        </div>
+        <div class="video-grid-3">
+          <video class="video-border" autoplay controls muted loop playsinline>
+            <source src="./static/videos/model_ablation0/2021.09.23.02.17.18_veh-49_01556_01818/m1.mp4"
+              type="video/mp4">
+          </video>
+          <video class="video-border" autoplay controls muted loop playsinline>
+            <source src="./static/videos/model_ablation0/2021.09.23.02.17.18_veh-49_01556_01818/m3.mp4"
+              type="video/mp4">
+          </video>
+          <video class="video-border" autoplay controls muted loop playsinline>
+            <source src="./static/videos/model_ablation0/2021.09.23.02.17.18_veh-49_01556_01818/m4.mp4"
+              type="video/mp4">
+          </video>
+        </div>
+
+        <div class="video-grid-3">
+          <video class="video-border" autoplay controls muted loop playsinline>
+            <source src="./static/videos/model_ablation1/2021.10.05.06.31.40_veh-52_01598_02013_f7f0989080295b75/m1.mp4"
+              type="video/mp4">
+          </video>
+          <video class="video-border" autoplay controls muted loop playsinline>
+            <source src="./static/videos/model_ablation1/2021.10.05.06.31.40_veh-52_01598_02013_f7f0989080295b75/m3.mp4"
+              type="video/mp4">
+          </video>
+          <video class="video-border" autoplay controls muted loop playsinline>
+            <source src="./static/videos/model_ablation1/2021.10.05.06.31.40_veh-52_01598_02013_f7f0989080295b75/m4.mp4"
+              type="video/mp4">
+          </video>
+        </div>
+
+        <div class="video-grid-3">
+          <video class="video-border" autoplay controls muted loop playsinline>
+            <source src="./static/videos/model_ablation2/2021.06.08.12.00.19_veh-35_00378_00748/m1.mp4"
+              type="video/mp4">
+          </video>
+          <video class="video-border" autoplay controls muted loop playsinline>
+            <source src="./static/videos/model_ablation2/2021.06.08.12.00.19_veh-35_00378_00748/m3.mp4"
+              type="video/mp4">
+          </video>
+          <video class="video-border" autoplay controls muted loop playsinline>
+            <source src="./static/videos/model_ablation2/2021.06.08.12.00.19_veh-35_00378_00748/m4.mp4"
+              type="video/mp4">
+          </video>
+        </div>
+
+        <div class="video-grid-3">
+          <video class="video-border" autoplay controls muted loop playsinline>
+            <source src="./static/videos/model_ablation3/2021.06.28.15.07.02_veh-35_00260_05954_ee479ca0620c5077/m1.mp4"
+              type="video/mp4">
+          </video>
+          <video class="video-border" autoplay controls muted loop playsinline>
+            <source src="./static/videos/model_ablation3/2021.06.28.15.07.02_veh-35_00260_05954_ee479ca0620c5077/m3.mp4"
+              type="video/mp4">
+          </video>
+          <video class="video-border" autoplay controls muted loop playsinline>
+            <source src="./static/videos/model_ablation3/2021.06.28.15.07.02_veh-35_00260_05954_ee479ca0620c5077/m4.mp4"
+              type="video/mp4">
+          </video>
+        </div>
+
+        <div class="video-grid-3">
+          <video class="video-border" autoplay controls muted loop playsinline>
+            <source src="./static/videos/model_ablation4/2021.06.28.15.10.57_veh-16_01001_02195_96074214b9645952/m1.mp4"
+              type="video/mp4">
+          </video>
+          <video class="video-border" autoplay controls muted loop playsinline>
+            <source src="./static/videos/model_ablation4/2021.06.28.15.10.57_veh-16_01001_02195_96074214b9645952/m3.mp4"
+              type="video/mp4">
+          </video>
+          <video class="video-border" autoplay controls muted loop playsinline>
+            <source src="./static/videos/model_ablation4/2021.06.28.15.10.57_veh-16_01001_02195_96074214b9645952/m4.mp4"
+              type="video/mp4">
+          </video>
+        </div>
+      </div>
+    </div>
+    </div>
+  </section>
+
+  <section class="section" style="margin-top: 0; padding-top: 50px;">
+    <h2 class="title is-4" style="text-align: center;">Gallery</h2>
+    <div class="container is-max-desktop">
+      <div class="columns is-centered">
+        <div class="column is-full-width" style="text-align: center;">
+          <p>
+            PLUTO is a capable of handling a wide range of urban driving scenarios (<span
+              style="color: rgb(207, 12, 12);">Playspeed <span>&times</span> 2</span>)
+          </p><br>
+        </div>
+      </div>
+    </div>
+    <div class="container is-max-desktop">
+      <div class="demo-block">
+        <h2><b>Lane Following</b></h2>
+        <div class="video-grid-3">
+          <video class="video-border" autoplay controls muted loop playsinline>
+            <source src="static/videos/follow/2021.07.24.20.02.23_veh-47_02071_02432_95a69124d7e7590d.mp4"
+              type="video/mp4">
+          </video>
+          <video class="video-border" autoplay controls muted loop playsinline>
+            <source src="./static/videos/follow/2021.07.24.22.58.17_veh-37_00207_03083_89b1cb5747245d85.mp4"
+              type="video/mp4">
+          </video>
+          <video class="video-border" autoplay controls muted loop playsinline>
+            <source src="./static/videos/follow/2021.06.08.12.00.19_veh-35_01722_02119_0c6054e1e1bc5151.mp4"
+              type="video/mp4">
+          </video>
+        </div>
+
+        <h2><b>Obstacle Avoidance</b></h2>
+        <div class="video-grid-3">
+          <video class="video-border" autoplay controls muted loop playsinline>
+            <source src="./static/videos/near_obs/2021.09.23.01.37.15_veh-53_00864_01648_fe54f6e97f6459d0.mp4"
+              type="video/mp4">
+          </video>
+          <video class="video-border" autoplay controls muted loop playsinline>
+            <source src="./static/videos/near_obs/2021.08.24.18.30.46_veh-08_00035_01650_bcc16856448a578f.mp4"
+              type="video/mp4">
+          </video>
+          <video class="video-border" autoplay controls muted loop playsinline>
+            <source src="./static/videos/near_obs/2021.07.24.16.07.03_veh-35_03033_05899_b4072c87fa305578.mp4"
+              type="video/mp4">
+          </video>
+        </div>
+
+        <h2><b>U-Turn</b></h2>
+        <div class="video-grid-3">
+          <video class="video-border" autoplay controls muted loop playsinline>
+            <source src="./static/videos/u_turn/2021.09.14.18.43.41_veh-45_00196_00578_d2e123b11b73577e.mp4"
+              type="video/mp4">
+          </video>
+          <video class="video-border" autoplay controls muted loop playsinline>
+            <source src="./static/videos/u_turn/2021.09.23.01.44.00_veh-49_00031_00661_55530db3810c5c9c.mp4"
+              type="video/mp4">
+          </video>
+          <video class="video-border" autoplay controls muted loop playsinline>
+            <source src="./static/videos/u_turn/2021.08.24.14.35.46_veh-45_00715_01404_ba12947216d95a60.mp4"
+              type="video/mp4">
+          </video>
+        </div>
+
+        <h2><b>Turning</b></h2>
+        <div class="video-grid-3">
+          <video class="video-border" autoplay controls muted loop playsinline>
+            <source src="./static/videos/turning/2021.08.31.14.40.58_veh-40_01268_01618_f7cf60d49ea25897.mp4"
+              type="video/mp4">
+          </video>
+          <video class="video-border" autoplay controls muted loop playsinline>
+            <source src="./static/videos/turning/2021.08.09.18.37.41_veh-28_00053_00548_6d391271a60256f6.mp4"
+              type="video/mp4">
+          </video>
+          <video class="video-border" autoplay controls muted loop playsinline>
+            <source src="./static/videos/turning/2021.07.24.16.48.51_veh-17_03553_04284_f2cfd05fbb5b5b8a.mp4"
+              type="video/mp4">
+          </video>
+        </div>
+
+        <h2><b>High Speed</b></h2>
+        <div class="video-grid-3">
+          <video class="video-border" autoplay controls muted loop playsinline>
+            <source src="./static/videos/high_speed/2021.06.07.17.48.02_veh-38_04793_05022_d6bc0f5c304d5277.mp4"
+              type="video/mp4">
+          </video>
+          <video class="video-border" autoplay controls muted loop playsinline>
+            <source src="./static/videos/high_speed/2021.06.07.19.29.59_veh-38_01715_01871_1c64b30689565c93.mp4"
+              type="video/mp4">
+          </video>
+          <video class="video-border" autoplay controls muted loop playsinline>
+            <source src="./static/videos/high_speed/2021.06.08.14.14.51_veh-35_02930_03199_3bb2f8cd074252a9.mp4"
+              type="video/mp4">
+          </video>
+        </div>
+
+        <h2><b>Lane Change</b></h2>
+        <div class="video-grid-3">
+          <video class="video-border" autoplay controls muted loop playsinline>
+            <source src="./static/videos/lane_change/2021.06.07.18.29.03_veh-16_00049_00824_fb7742eb940853b5.mp4"
+              type="video/mp4">
+          </video>
+          <video class="video-border" autoplay controls muted loop playsinline>
+            <source src="./static/videos/lane_change/2021.07.24.16.51.13_veh-26_01887_04395_12eea643bca95f1d.mp4"
+              type="video/mp4">
+          </video>
+          <video class="video-border" autoplay controls muted loop playsinline>
+            <source src="./static/videos/lane_change/2021.09.23.01.37.15_veh-53_00016_00424_60222e1a81aa5190.mp4"
+              type="video/mp4">
+          </video>
+        </div>
+
+        <h2><b>Pick-up drop-off</b></h2>
+        <div class="video-grid-3">
+          <video class="video-border" autoplay controls muted loop playsinline>
+            <source src="./static/videos/pick_drop/2021.07.24.23.50.16_veh-17_03681_04569_7ff5f768c36e5a67.mp4"
+              type="video/mp4">
+          </video>
+          <video class="video-border" autoplay controls muted loop playsinline>
+            <source src="./static/videos/pick_drop/2021.07.24.23.50.16_veh-17_03681_04569_982dc14c86d75379.mp4"
+              type="video/mp4">
+          </video>
+          <video class="video-border" autoplay controls muted loop playsinline>
+            <source src="./static/videos/pick_drop/2021.07.24.00.36.59_veh-47_00439_02454_20f55a2d92a751a9.mp4"
+              type="video/mp4">
+          </video>
+        </div>
+
+        <h2><b>Departing</b></h2>
+        <div class="video-grid-3">
+          <video class="video-border" autoplay controls muted loop playsinline>
+            <source src="./static/videos/departing/2021.08.24.19.26.32_veh-08_00249_00710_8df03580291150a3.mp4"
+              type="video/mp4">
+          </video>
+          <video class="video-border" autoplay controls muted loop playsinline>
+            <source src="./static/videos/departing/2021.08.24.20.03.01_veh-45_01091_01622_d9f52fb9df8b5172.mp4"
+              type="video/mp4">
+          </video>
+          <video class="video-border" autoplay controls muted loop playsinline>
+            <source src="./static/videos/departing/2021.09.14.19.46.05_veh-45_01029_01458_2b1dbb7eeed152e3.mp4"
+              type="video/mp4">
+          </video>
+        </div>
+
+        <h2><b>Near traffic cones</b></h2>
+        <div class="video-grid-3">
+          <video class="video-border" autoplay controls muted loop playsinline>
+            <source src="./static/videos/near_cones/2021.06.08.12.00.19_veh-35_00378_00748_2e5d157d384c5481.mp4"
+              type="video/mp4">
+          </video>
+          <video class="video-border" autoplay controls muted loop playsinline>
+            <source src="./static/videos/near_cones/2021.07.24.00.12.51_veh-37_02616_03464_1d9c6cd17e2458c2.mp4"
+              type="video/mp4">
+          </video>
+          <video class="video-border" autoplay controls muted loop playsinline>
+            <source src="./static/videos/near_cones/2021.09.23.06.45.26_veh-50_00037_00232_145fe656584b5d06.mp4"
+              type="video/mp4">
+          </video>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+
+  <!-- <section class="section" id="BibTeX">
+    <div class="container is-max-desktop content">
+      <h2 class="title">BibTeX</h2>
+      <pre><code></code></pre>
+    </div>
+  </section> -->
+
+
+  <footer class="footer">
+    <div class="container">
+      <!-- <div class="content has-text-centered">
+        <a class="icon-link" href="./static/videos/nerfies_paper.pdf">
+          <i class="fas fa-file-pdf"></i>
+        </a>
+        <a class="icon-link" href="https://github.com/keunhong" class="external-link" disabled>
+          <i class="fab fa-github"></i>
+        </a>
+      </div> -->
+      <div class="columns is-centered">
+        <div class="content">
+          <p>
+            Project page is inspired by <a href="https://github.com/nerfies/nerfies.github.io">Nerfies</a>.
+          </p>
+        </div>
+      </div>
+    </div>
+    </div>
+  </footer>
+
+  <script type="text/javascript">
+    var videos = document.querySelectorAll('video');
+    for (var i = 0; i < videos.length; i++) {
+      videos[i].playbackRate = 2.0;
+    }
+  </script>
+
+</body>
+
+
+</html>
